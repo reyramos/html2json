@@ -66,10 +66,10 @@
           // like <img src="hoge.png"/>
           // add to parents
           var parent = bufArray[0] || results;
-          if (parent.child === undefined) {
+          if (parent && parent.child === undefined) {
             parent.child = [];
           }
-          parent.child.push(node);
+          if(parent)parent.child.push(node);
         } else {
           bufArray.unshift(node);
         }
@@ -84,10 +84,10 @@
           results.child.push(node);
         } else {
           var parent = bufArray[0];
-          if (parent.child === undefined) {
+          if (parent && parent.child === undefined) {
             parent.child = [];
           }
-          parent.child.push(node);
+          if(parent)parent.child.push(node);
         }
       },
       chars: function(text) {
@@ -100,10 +100,10 @@
           results.child.push(node);
         } else {
           var parent = bufArray[0];
-          if (parent.child === undefined) {
+          if (parent && parent.child === undefined) {
             parent.child = [];
           }
-          parent.child.push(node);
+          if(parent)parent.child.push(node);
         }
       },
       comment: function(text) {
@@ -113,10 +113,10 @@
           text: text,
         };
         var parent = bufArray[0];
-        if (parent.child === undefined) {
+        if (parent && parent.child === undefined) {
           parent.child = [];
         }
-        parent.child.push(node);
+        if(parent)parent.child.push(node);
       },
     });
     return results;
@@ -127,14 +127,14 @@
     var empty = ['area', 'base', 'basefont', 'br', 'col', 'frame', 'hr', 'img', 'input', 'isindex', 'link', 'meta', 'param', 'embed'];
 
     var child = '';
-    if (json.child) {
+    if (json && json.child) {
       child = json.child.map(function(c) {
         return json2html(c);
       }).join('');
     }
 
     var attr = '';
-    if (json.attr) {
+    if (json && json.attr) {
       attr = Object.keys(json.attr).map(function(key) {
         var value = json.attr[key];
         if (Array.isArray(value)) value = value.join(' ');
@@ -143,7 +143,7 @@
       if (attr !== '') attr = ' ' + attr;
     }
 
-    if (json.node === 'element') {
+    if (json && json.node === 'element') {
       var tag = json.tag;
       if (empty.indexOf(tag) > -1) {
         // empty element
